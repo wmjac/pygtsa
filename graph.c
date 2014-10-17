@@ -19,19 +19,19 @@
 
 #include "graph.h"
 
-graph_t * graph_alloc (size_t nv)
+graph_t * graph_alloc (size_t nv, size_t max_degree)
 {
   graph_t * graph = (graph_t *) malloc (sizeof (graph_t));
   if (graph == NULL) goto fail;
   graph->max_nvertices = nv;
-  graph->max_nedges = nv * nv;
+  graph->max_nedges = nv * max_degree;
   graph->nvertices = 0;
   graph->nedges = 0;
   graph->nvedges = (size_t *) malloc (sizeof (size_t) * nv);
   if (graph->nvedges == NULL) goto fail;
   graph->edges = (unsigned short **) malloc (sizeof (unsigned short *) * nv);
   if (graph->edges == NULL) goto fail;
-  graph->edges[0] = (unsigned short *) malloc (sizeof (unsigned short *) * nv * nv);
+  graph->edges[0] = (unsigned short *) malloc (sizeof (unsigned short *) * graph->max_nedges);
   if (graph->edges[0] == NULL) goto fail;
   size_t i, j;
   for (i = 0; i < nv; i++)
@@ -39,21 +39,21 @@ graph_t * graph_alloc (size_t nv)
       graph->nvedges[i] = 0;
       if (i > 0)
 	{
-	  graph->edges[i] = graph->edges[0] + i * nv;
+	  graph->edges[i] = graph->edges[0] + i * max_degree;
 	}
-      for (j = 0; j < nv; j++)
+      for (j = 0; j < max_degree; j++)
 	{
 	  graph->edges[i][j] = 0;
 	}
     }
   graph->nbridges = 0;
-  graph->bridges = (edge_t *) malloc (sizeof (edge_t) * nv * nv);
+  graph->bridges = (edge_t *) malloc (sizeof (edge_t) * graph->max_nedges);
   if (graph->bridges == NULL) goto fail;
   graph->nremovable = 0;
-  graph->removable = (edge_t *) malloc (sizeof (edge_t) * nv * nv);
+  graph->removable = (edge_t *) malloc (sizeof (edge_t) * graph->max_nedges);
   if (graph->removable == NULL) goto fail;
   graph->nadjacents = 0;
-  graph->adjacents = (edge_t *) malloc (sizeof (edge_t) * nv * nv);
+  graph->adjacents = (edge_t *) malloc (sizeof (edge_t) * graph->max_nedges);
   if (graph->adjacents == NULL) goto fail;
 
   graph->_dfs_iter = 0;

@@ -48,7 +48,7 @@ typedef struct
 }
 graph_t;
 
-graph_t * graph_alloc (size_t nv);
+graph_t * graph_alloc (size_t nv, size_t max_degree);
 void graph_free (graph_t * graph);
 void graph_copy (const graph_t * orig, graph_t * dest);
 

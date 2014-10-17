@@ -24,11 +24,8 @@ cgraph.random_init()
 # ---------------------
 
 cdef class Graph:
-    def __init__(self, assembly, nedges_max=None):
-        if nedges_max == None:
-            self._graph = cgraph.graph_alloc(assembly.number_of_nodes())
-        else:
-            self._graph = cgraph.graph_alloc(nedges_max)
+    def __init__(self, assembly):
+        self._graph = cgraph.graph_alloc(assembly.number_of_nodes(), max(assembly.degree(v) for v in assembly.nodes()))
         for edge in assembly.edges():
             cgraph.graph_add_edge(self._graph, edge[0], edge[1])
 
