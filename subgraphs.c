@@ -166,6 +166,8 @@ void wl_sample_subgraphs_EV (const graph_t * graph, graph_t * subgraph, histogra
 	}
     }
 
+  graph_find_bridges (subgraph);
+
   free (removable_old);
   free (adjacents_old);
   free (visits);
@@ -252,6 +254,8 @@ void mc_sample_subgraphs_EV (const graph_t * graph, graph_t * subgraph, const hi
 	    }
 	}
     }
+
+  graph_find_bridges (subgraph);
   
   free (removable_old);
   free (adjacents_old);

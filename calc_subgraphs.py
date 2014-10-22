@@ -32,6 +32,9 @@ if __name__ == '__main__':
 
     target = Assembly.read(clargs.structure)
 
+    if clargs.output_prefix != '' and clargs.output_prefix[-1] != '/':
+        clargs.output_prefix = clargs.output_prefix + '_'
+
     # Sanity checks
 
     if not nx.is_connected(target):
@@ -44,9 +47,6 @@ if __name__ == '__main__':
 
     # Run subgraphs calculation
 
-    if clargs.output_prefix != '' and clargs.output_prefix[-1] != '/':
-        clargs.output_prefix = clargs.output_prefix + '_'
-
     print("Calculating subgraph density of states...")
     print("Writing density of states to", clargs.output_prefix + 'lnhEV.dat')
     lnhEV = wl_simulate_EV(target, output=clargs.output_prefix + 'lnhEV.dat')
@@ -55,7 +55,7 @@ if __name__ == '__main__':
 
     print("Calculating dihedrals and adjacents averages...")
     nsteps = 2 * target.number_of_edges()
-    nsamples = 1000 * sum(sum(1 for j in range(lnhEV.h.shape[1]) if lnhEV.h[i,j] >= 0.) for i in range(lnhEV.h.shape[0]))
+    nsamples = 4000 * sum(sum(1 for j in range(lnhEV.h.shape[1]) if lnhEV.h[i,j] >= 0.) for i in range(lnhEV.h.shape[0]))
     print("Collecting %d samples with %d steps between samples." % (nsamples, nsteps))
     dihedrals, adjacents, visits = mc_simulate_dihedrals_adjacents_EV(target, lnhEV, clargs.qdih, nsteps, nsamples)
 
