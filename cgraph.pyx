@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 import math
+import numpy as np
 from pygtsa.histogram import EVHistogram
 
 cimport cgraph
@@ -25,12 +26,20 @@ cgraph.random_init()
 
 cdef class Graph:
     def __init__(self, assembly):
-        self._graph = cgraph.graph_alloc(assembly.number_of_nodes(), max(assembly.degree(v) for v in assembly.nodes()))
+        self._graph = cgraph.graph_alloc(assembly.number_of_nodes(), \
+                                         max(assembly.degree(v) for v in assembly.nodes()))
         for edge in assembly.edges():
             cgraph.graph_add_edge(self._graph, edge[0], edge[1])
 
     def __dealloc__(self):
         cgraph.graph_free(self._graph)
+
+    def edges_iter(self):
+        cdef size_t i, j
+        for i in range(self._graph.max_nvertices):
+            for j in range(self._graph.nvedges[i]):
+                if self._graph.edges[i][j] > i:
+                    yield (i, self._graph.edges[i][j])
 
     def bridges(self):
         graph_find_bridges(self._graph)
@@ -95,13 +104,14 @@ def mc_simulate_dihedrals_adjacents_EV(target, py_lnhEV, qdih, nsteps, nsamples)
     adjacents = EVHistogram(target)
     visits = EVHistogram(target, dtype=int)
 
-    cdef size_t E, V
+    cdef int E, V, B
 
     for sample in range(nsamples):
         cgraph.mc_sample_subgraphs_EV(target_graph._graph, fragment_graph._graph, lnhEV, nsteps)
         E = fragment_graph._graph.nedges
         V = fragment_graph._graph.nvertices
-        dih = qdih**(1 + int(fragment_graph._graph.nbridges) - int(V))
+        B = fragment_graph._graph.nbridges
+        dih = qdih**(1 + B - V)
         dihedrals.inc(E, V, dih)
         adjacents.inc(E, V, fragment_graph._graph.nadjacents)
         visits.inc(E, V, 1)
@@ -117,3 +127,37 @@ def mc_simulate_dihedrals_adjacents_EV(target, py_lnhEV, qdih, nsteps, nsamples)
 
     cgraph.histogramEV_free(lnhEV)
     return dihedrals, adjacents, visits
+
+def mc_simulate_energies_EV(target, py_lnhEV, energy_dicts, nsteps, nsamples):
+    cdef cgraph.Graph target_graph = cgraph.Graph(target)
+    cdef cgraph.Graph fragment_graph = cgraph.Graph(target)
+
+    cdef cgraph.histogramEV_t * lnhEV = cgraph.histogramEV_alloc(target_graph._graph)
+    histogramEV_py_to_c(py_lnhEV, lnhEV)
+
+    visits = EVHistogram(target, dtype=int)
+    sums = [EVHistogram(target) for k in range(len(energy_dicts))]
+
+    cdef size_t E, V
+
+    for sample in range(nsamples):
+        cgraph.mc_sample_subgraphs_EV(target_graph._graph, fragment_graph._graph, lnhEV, nsteps)
+        E = fragment_graph._graph.nedges
+        V = fragment_graph._graph.nvertices
+        for k in range(len(energy_dicts)):
+            val = math.exp(sum(energy_dicts[k][edge] for edge in fragment_graph.edges_iter()))
+            sums[k].inc(E, V, val)
+        visits.inc(E, V, 1)
+
+    means = EVHistogram(target)
+    for i in range(visits.h.shape[0]):
+        for j in range(visits.h.shape[1]):
+            if visits.h[i,j] > 0:
+                E = i
+                means.h[i,j] = sum(math.log(sums[k].h[i,j] / visits.h[i,j]) / E \
+                                   for k in range(len(energy_dicts))) / len(energy_dicts)
+            else:
+                means.h[i,j] = -1.
+
+    cgraph.histogramEV_free(lnhEV)
+    return means, visits

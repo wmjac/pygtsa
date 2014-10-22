@@ -18,7 +18,7 @@
 
 noinst_LTLIBRARIES = libgraph.la
 pkgpyexec_LTLIBRARIES = cgraph.la
-pkgpython_PYTHON = __init__.py calc_subgraphs.py histogram.py structure.py
+pkgpython_PYTHON = __init__.py calc_subgraphs.py calc_energies.py histogram.py structure.py
 
 noinst_HEADERS = graph.h random.h sample.h
 dist_noinst_DATA = cgraph.pxd cgraph.pyx examples/
