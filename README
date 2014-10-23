@@ -1,0 +1,83 @@
+pygtsa: Python graph-theoretical self-assembly package
+======================================================
+
+This package provides a Python front-end and efficient C-implementation
+of the key algorithms described in:
+
+William M. Jacobs, Aleks Reinhardt and Daan Frenkel, "Graph-theoretical
+prediction of free-energy landscapes for complex self-assembly,"
+under review (2014).
+
+William M. Jacobs, Aleks Reinhardt and Daan Frenkel, "Rational design
+of self-assembly pathways for complex multicomponent structures,"
+in preparation (2014).
+
+Use of this package is permitted in accordance with the terms of the
+included LICENSE file.
+
+INSTALLATION
+------------
+
+This package uses the standard GNU autotools build system.  Installation
+can usually be completed by running the following commands:
+
+./configure
+make
+sudo make install
+
+Before installing, please ensure that you have the following dependencies
+installed on your system:
+
+Python (version 3 and above)
+numpy for python3
+networkx for python3
+GSL (GNU scientific library)
+
+The installation target should install the pygtsa package in your Python
+version's site-packages directory.
+
+USAGE
+-----
+
+To execute a calculation script, run e.g.
+
+python3 -m pygtsa.calc_subgraphs input_edge_list
+
+Currently, the available calculation scripts are:
+
+calc_subgraphs (for computing the fragment density of states)
+calc_energies (for computing the effective mean bond energies)
+calc_yield (for computing the on-pathway yield as a function of bond strength)
+calc_fe_profile (for computing a free-energy profile at a fixed bond strength)
+calc_barrier (for computing the nucleation barrier as a function of bond strength)
+calc_incidental (for computing off-pathway dimers at a fixed bond strength)
+
+A detailed list of the required arguments for each command can be found by
+running e.g.
+
+python3 -m pygtsa.calc_subgraphs --help
+
+Input structure files can either list the graph edges, one per line, or
+use the graphviz DOT format.  To convert between these two formats, use 
+the pygtsa.structure utility.  Example input structures (named edges.dat)
+and output files can be found in the examples directory.
+
+As with any simulation-based tool, the performance and convergence of a
+calculation depends on the choice of a large number of parameters.  The
+default parameters should work well for the structures provided in the
+examples directory.  Key convergence parameters include:
+
+fmin (cgraph.pyx; convergence target for the Wang--Landau algorithm)
+flatness (cgraph.pyx; histogram flatness threshold for the Wang--Landau algorithm)
+nsteps (calc_subgraphs.py; number of Monte Carlo steps between samples)
+nsamples (calc_subgraphs.py; total number of samples)
+
+See the source code for further information.
+
+MODIFYING
+---------
+
+Changes can be made directly to the pure Python (.py) files and installed
+using make install.  Changing the C source code or Python wrappers (.pyx,.pxd)
+requires running Cython on the .pyx files before running make.  Adding or
+removing files to the package requires using GNU autotools.
