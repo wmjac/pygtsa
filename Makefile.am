@@ -18,10 +18,10 @@
 
 noinst_LTLIBRARIES = libgraph.la
 pkgpyexec_LTLIBRARIES = cgraph.la
-pkgpython_PYTHON = __init__.py calc_subgraphs.py calc_energies.py histogram.py structure.py
+pkgpython_PYTHON = __init__.py calc_barrier.py calc_energies.py calc_fe_profile.py calc_incidental.py calc_subgraphs.py calc_yield.py histogram.py structure.py
 
 noinst_HEADERS = graph.h random.h sample.h
-dist_noinst_DATA = cgraph.pxd cgraph.pyx examples/
+dist_noinst_DATA = cgraph.pxd cgraph.pyx examples LICENSE
 
 libgraph_la_SOURCES = graph.c bridges.c adjacents.c subgraphs.c random.c histogram_ev.c
 libgraph_la_LIBADD = -lgsl -lgslcblas -lm

@@ -64,3 +64,10 @@ class EVHistogram(object):
         return self.h + s.h
     def __sub__(self, s):
         return self.h - s.h
+
+def read_histogram(stream):
+    return EVHistogram.read(stream).h
+
+def read_meta(stream):
+    tags = {line.split()[1] : line.split()[2:] for line in stream if line[0] == '#'}
+    return tags
