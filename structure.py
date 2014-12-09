@@ -65,6 +65,8 @@ class Assembly(nx.Graph):
     def read_edges(stream):
         G = nx.Graph()
         for line in stream:
+            if line[0] == '#':
+                continue
             t = line.split()
             if len(t) == 0:
                 continue
