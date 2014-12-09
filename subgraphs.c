@@ -26,10 +26,10 @@
   size_t nremovable_old, nadjacents_old;				\
   size_t nremovable_tmp, nadjacents_tmp;				\
   edge_t * removable_old = (edge_t *)					\
-    malloc (sizeof (edge_t) * graph->max_nvertices * graph->max_nvertices); \
+    malloc (sizeof (edge_t) * graph->max_nedges);			\
   edge_t * removable_tmp;						\
   edge_t * adjacents_old = (edge_t *)					\
-    malloc (sizeof (edge_t) * graph->max_nvertices * graph->max_nvertices); \
+    malloc (sizeof (edge_t) * graph->max_nedges);			\
   edge_t * adjacents_tmp;
 
 #define swap_adjacents_removable()		\

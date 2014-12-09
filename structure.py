@@ -76,10 +76,10 @@ class Assembly(nx.Graph):
 
     def write_dot(self, stream, circsize=0.6, edgelength=1., fontface='Arial', fillcolor='#cccccc'):
         stream.write("graph G {\n")
-        for node in target.nodes():
+        for node in self.nodes():
             stream.write("  %d [shape=circle,height=%g,width=%g,fontname=\"%s\",style=filled,fillcolor=\"%s\"];\n" 
                     % (node + 1, circsize, circsize, fontface, fillcolor))
-        for edge in target.edges():
+        for edge in self.edges():
             stream.write("  %d -- %d [len=%g];\n" % (edge[0] + 1, edge[1] + 1, edgelength))
         stream.write("}\n")
 
