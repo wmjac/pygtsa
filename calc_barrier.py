@@ -26,6 +26,7 @@ def barrier_peak(F):
     return Vmax, Fmax
 
 def nucleation_barrier(F):
+    '''Calculate the (largest) barrier for nucleating a cluster with F(V) < F(1)'''
     minima = [[]]
     for i in range(2, len(F)):
         if F[i] < F[1]:
@@ -46,9 +47,13 @@ def nucleation_barrier(F):
     elif len(minima) == 1:
         return None, None
     else: # len(minima) > 1:
-        Fb = F[minima[0][-1]:minima[1][0] + 1]
-        Fmax = Fb.max() - F[1:minima[0][-1]].min()
-        Vmax = Fb.argmax() + minima[0][-1]
+        Vmax, Fmax = barrier_peak(F[:minima[0][0]])
+        for i in range(len(minima) - 1):
+            Fb = F[minima[i][-1]:minima[i+1][0] + 1]
+            Fmax_i = Fb.max() - F[1:minima[i][-1]].min()
+            if Fmax_i > Fmax:
+                Fmax = Fmax_i
+                Vmax = Fb.argmax() + minima[0][-1]
         return Vmax, Fmax
 
 if __name__ == '__main__':
