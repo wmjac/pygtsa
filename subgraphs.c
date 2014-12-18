@@ -48,12 +48,12 @@
     subgraph->removable = removable_tmp;	\
   } while (0)
 
-void wl_sample_subgraphs_EV (const graph_t * graph, graph_t * subgraph, histogramEV_t * lnhEV, double f, double flatness, unsigned int ncheck)
+void wl_sample_subgraphs_EV (const graph_t * graph, graph_t * subgraph, histogramEV_t * lnhEV, double f, double flatness, unsigned long ncheck)
 {
   const size_t max_x = lnhEV->max_x;
   const size_t max_y = lnhEV->max_y;
 
-  unsigned int * visits = (unsigned int *) malloc (sizeof (unsigned int) * max_x * max_y);
+  unsigned long * visits = (unsigned long *) malloc (sizeof (unsigned long) * max_x * max_y);
   size_t i;
   for (i = 0; i < max_x * max_y; i++)
     {
@@ -68,7 +68,7 @@ void wl_sample_subgraphs_EV (const graph_t * graph, graph_t * subgraph, histogra
   size_t edge_index, nedges_old, nvertices_old;
   double arg;
 
-  unsigned int step;
+  unsigned long step;
   do {
     for (step = 0; step < ncheck; step++)
       {
@@ -133,9 +133,9 @@ void wl_sample_subgraphs_EV (const graph_t * graph, graph_t * subgraph, histogra
       }
 
     /* Check flatness condition. */
-    unsigned int n = 0;
-    unsigned int visits_sum = 0;
-    unsigned int visits_max = 0;
+    unsigned long n = 0;
+    unsigned long visits_sum = 0;
+    unsigned long visits_max = 0;
     for (i = 0; i < max_x * max_y; i++)
       {
 	if (visits[i] > 0)
@@ -173,7 +173,7 @@ void wl_sample_subgraphs_EV (const graph_t * graph, graph_t * subgraph, histogra
   free (visits);
 }
 
-void wl_simulate_subgraphs_EV (const graph_t * graph, graph_t * subgraph, histogramEV_t * lnhEV, double f_start, double f_target, double flatness, unsigned int ncheck)
+void wl_simulate_subgraphs_EV (const graph_t * graph, graph_t * subgraph, histogramEV_t * lnhEV, double f_start, double f_target, double flatness, unsigned long ncheck)
 {
   double f = f_start;
   while (f >= f_target)
@@ -184,7 +184,7 @@ void wl_simulate_subgraphs_EV (const graph_t * graph, graph_t * subgraph, histog
     }
 }
 
-void mc_sample_subgraphs_EV (const graph_t * graph, graph_t * subgraph, const histogramEV_t * lnhEV, unsigned int nsteps)
+void mc_sample_subgraphs_EV (const graph_t * graph, graph_t * subgraph, const histogramEV_t * lnhEV, unsigned long nsteps)
 {
   INIT_ADJACENTS_REMOVABLE_SWAP;
   graph_find_bridges (subgraph);
@@ -194,7 +194,7 @@ void mc_sample_subgraphs_EV (const graph_t * graph, graph_t * subgraph, const hi
   size_t edge_index, nedges_old, nvertices_old;
   double arg;
 
-  unsigned int step;
+  unsigned long step;
   for (step = 0; step < nsteps; step++)
     {
       nedges_old = subgraph->nedges;

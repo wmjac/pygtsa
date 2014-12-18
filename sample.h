@@ -36,9 +36,12 @@ void histogramEV_fill (histogramEV_t * h, double z);
 #define histogramEV_set(h, E, V, z) do {(h)->data[((E) + 1) - (V) + (h)->max_y * (E)] = z;} while (0)
 #define histogramEV_inc(h, E, V, z) do {(h)->data[((E) + 1) - (V) + (h)->max_y * (E)] += z;} while (0)
 
-void wl_simulate_subgraphs_EV (const graph_t * graph, graph_t * subgraph, histogramEV_t * lnhEV, double f_start, double f_target, double flatness, unsigned int ncheck);
-void wl_sample_subgraphs_EV (const graph_t * graph, graph_t * subgraph, histogramEV_t * lnhEV, double f, double flatness, unsigned int ncheck);
+void wl_simulate_subgraphs_EV (const graph_t * graph, graph_t * subgraph, histogramEV_t * lnhEV, \
+			       double f_start, double f_target, double flatness, unsigned long ncheck);
+void wl_sample_subgraphs_EV (const graph_t * graph, graph_t * subgraph, histogramEV_t * lnhEV, \
+			     double f, double flatness, unsigned long ncheck);
 
-void mc_sample_subgraphs_EV (const graph_t * graph, graph_t * subgraph, const histogramEV_t * lnhEV, unsigned int nsteps);
+void mc_sample_subgraphs_EV (const graph_t * graph, graph_t * subgraph, const histogramEV_t * lnhEV, \
+			     unsigned long nsteps);
 
 #endif /* __SAMPLE_H__ */
