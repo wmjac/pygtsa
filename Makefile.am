@@ -27,6 +27,6 @@ libgraph_la_SOURCES = graph.c bridges.c adjacents.c subgraphs.c random.c histogr
 libgraph_la_LIBADD = -lgsl -lgslcblas -lm
 
 cgraph_la_SOURCES = cgraph.c
-cgraph_la_CPPFLAGS = -I$(PYTHON_PREFIX)/include/python$(PYTHON_VERSION)
+cgraph_la_CPPFLAGS = $(PYTHON_INCLUDES)
 cgraph_la_LDFLAGS = -module
 cgraph_la_LIBADD = libgraph.la

@@ -46,7 +46,8 @@ AC_CHECK_FUNCS([memset strchr])
 
 # Search for Python and required packages
 AM_PATH_PYTHON([3])
-PYTHON_PREFIX=`$PYTHON -c 'import sys; print(sys.prefix)'`
+AC_SUBST(PYTHON_INCLUDES, `python3-config --includes`)
+AC_PREFIX_DEFAULT(`python3-config --prefix`)
 echo -ne "checking for numpy... "
 AS_IF([$PYTHON -c 'import numpy'], [echo "yes"], [AC_MSG_FAILURE([cannot import numpy in Python$PYTHON_VERSION])])
 echo -ne "checking for networkx... "
