@@ -27,9 +27,11 @@
   size_t nremovable_tmp, nadjacents_tmp;				\
   edge_t * removable_old = (edge_t *)					\
     malloc (sizeof (edge_t) * graph->max_nedges);			\
+  if (removable_old == NULL) goto fail;					\
   edge_t * removable_tmp;						\
   edge_t * adjacents_old = (edge_t *)					\
     malloc (sizeof (edge_t) * graph->max_nedges);			\
+  if (adjacents_old == NULL) goto fail;					\
   edge_t * adjacents_tmp;
 
 #define swap_adjacents_removable()		\
@@ -54,6 +56,7 @@ void wl_sample_subgraphs_EV (const graph_t * graph, graph_t * subgraph, histogra
   const size_t max_y = lnhEV->max_y;
 
   unsigned long * visits = (unsigned long *) malloc (sizeof (unsigned long) * max_x * max_y);
+  if (visits == NULL) goto fail;
   size_t i;
   for (i = 0; i < max_x * max_y; i++)
     {
@@ -168,9 +171,10 @@ void wl_sample_subgraphs_EV (const graph_t * graph, graph_t * subgraph, histogra
 
   graph_find_bridges (subgraph);
 
-  free (removable_old);
-  free (adjacents_old);
-  free (visits);
+ fail:
+  if (removable_old) free (removable_old);
+  if (adjacents_old) free (adjacents_old);
+  if (visits) free (visits);
 }
 
 void wl_simulate_subgraphs_EV (const graph_t * graph, graph_t * subgraph, histogramEV_t * lnhEV, double f_start, double f_target, double flatness, unsigned long ncheck)
@@ -256,7 +260,8 @@ void mc_sample_subgraphs_EV (const graph_t * graph, graph_t * subgraph, const hi
     }
 
   graph_find_bridges (subgraph);
-  
-  free (removable_old);
-  free (adjacents_old);
+
+ fail:  
+  if (removable_old) free (removable_old);
+  if (adjacents_old) free (adjacents_old);
 }

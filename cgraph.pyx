@@ -28,6 +28,7 @@ cdef class Graph:
     def __init__(self, assembly):
         self._graph = cgraph.graph_alloc(assembly.number_of_nodes(), \
                                          max(assembly.degree(v) for v in assembly.nodes()))
+        if self._graph == NULL: raise MemoryError()
         for edge in assembly.edges():
             cgraph.graph_add_edge(self._graph, edge[0], edge[1])
 
@@ -68,6 +69,7 @@ def wl_simulate_EV(target, finit=1., fmin=1.e-4, flatness=0.9, ncheck=100000, ou
     cdef cgraph.Graph fragment_graph = cgraph.Graph(target)
 
     cdef cgraph.histogramEV_t * lnhEV = cgraph.histogramEV_alloc(target_graph._graph)
+    if lnhEV == NULL: raise MemoryError()
     histogramEV_fill(lnhEV, 0.);
 
     cdef double f = finit
@@ -89,6 +91,7 @@ def mc_sample_EV(target, fragment, py_lnhEV, nsteps):
     cdef cgraph.Graph fragment_graph = cgraph.Graph(fragment)
 
     cdef cgraph.histogramEV_t * lnhEV = cgraph.histogramEV_alloc(target_graph._graph)
+    if lnhEV == NULL: raise MemoryError()
     histogramEV_py_to_c(py_lnhEV, lnhEV)
     cgraph.mc_sample_subgraphs_EV(target_graph._graph, fragment_graph._graph, lnhEV, nsteps)
     cgraph.histogramEV_free(lnhEV)
@@ -98,6 +101,7 @@ def mc_simulate_dihedrals_adjacents_EV(target, py_lnhEV, qdih, nsteps, nsamples)
     cdef cgraph.Graph fragment_graph = cgraph.Graph(target)
 
     cdef cgraph.histogramEV_t * lnhEV = cgraph.histogramEV_alloc(target_graph._graph)
+    if lnhEV == NULL: raise MemoryError()
     histogramEV_py_to_c(py_lnhEV, lnhEV)
 
     dihedrals = EVHistogram(target)
@@ -133,6 +137,7 @@ def mc_simulate_energies_EV(target, py_lnhEV, energy_dicts, nsteps, nsamples):
     cdef cgraph.Graph fragment_graph = cgraph.Graph(target)
 
     cdef cgraph.histogramEV_t * lnhEV = cgraph.histogramEV_alloc(target_graph._graph)
+    if lnhEV == NULL: raise MemoryError()
     histogramEV_py_to_c(py_lnhEV, lnhEV)
 
     visits = EVHistogram(target, dtype=int)
