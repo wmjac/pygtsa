@@ -4,13 +4,13 @@ pygtsa: Python graph-theoretical self-assembly package
 This package provides a Python front-end and efficient C-implementation
 of the key algorithms described in:
 
-William M. Jacobs, Aleks Reinhardt and Daan Frenkel, "Graph-theoretical
+William M. Jacobs, Aleks Reinhardt and Daan Frenkel, "Theoretical
 prediction of free-energy landscapes for complex self-assembly,"
-under review (2014).
+J. Chem. Phys. 142, 021101 (2014).
 
 William M. Jacobs, Aleks Reinhardt and Daan Frenkel, "Rational design
 of self-assembly pathways for complex multicomponent structures,"
-in preparation (2014).
+arXiv (2015).
 
 Use of this package is permitted in accordance with the terms of the
 included LICENSE file.
