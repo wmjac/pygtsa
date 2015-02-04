@@ -20,9 +20,9 @@ INSTALLATION
 
 This package uses the standard GNU autotools build system.
 
-** PLEASE NOTE: To obtain the release version (recommended for simple
+**PLEASE NOTE: To obtain the release version (recommended for simple
  installation), please download and unpack the tarball from the
- [release branch](https://github.com/wmjac/pygtsa/tree/release). **
+ [release branch](https://github.com/wmjac/pygtsa/tree/release).**
 
 Before installing, please ensure that you have the following dependencies
 installed on your system:
