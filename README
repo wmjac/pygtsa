@@ -20,6 +20,10 @@ INSTALLATION
 
 This package uses the standard GNU autotools build system.
 
+** PLEASE NOTE: To obtain the release version (recommended for simple
+ installation), please download and unpack the tarball from the
+ [release branch](https://github.com/wmjac/pygtsa/tree/release). **
+
 Before installing, please ensure that you have the following dependencies
 installed on your system:
 
@@ -42,7 +46,7 @@ USAGE
 
 To execute a calculation script, run e.g.
 
-   python3 -m pygtsa.calc_subgraphs input_edge_list
+    python3 -m pygtsa.calc_subgraphs input_edge_list
 
 Currently, the available calculation scripts are:
 
@@ -68,10 +72,10 @@ calculation depends on the choice of a large number of parameters.  The
 default parameters should work well for the structures provided in the
 examples directory.  Key convergence parameters include:
 
-fmin (cgraph.pyx; convergence target for the Wang--Landau algorithm)
-flatness (cgraph.pyx; histogram flatness threshold for the Wang--Landau algorithm)
-nsteps (calc_subgraphs.py; number of Monte Carlo steps between samples)
-nsamples (calc_subgraphs.py; total number of samples)
+* fmin (cgraph.pyx; convergence target for the Wang--Landau algorithm)
+* flatness (cgraph.pyx; histogram flatness threshold for the Wang--Landau algorithm)
+* nsteps (calc_subgraphs.py; number of Monte Carlo steps between samples)
+* nsamples (calc_subgraphs.py; total number of samples)
 
 See the source code for further information.
 
