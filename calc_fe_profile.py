@@ -21,16 +21,19 @@ from pygtsa.calc_yield import load_dihedrals, find_target_indices, lnhzEV
 
 def free_energy_profile_V(lnhz):
     F = np.zeros(lnhz.shape[0] - lnhz.shape[1] + 3)
-    Vmax = 0
+    lnhzmax_V = np.zeros(lnhz.shape[0] - lnhz.shape[1] + 3)
     for i in range(lnhz.shape[0]):
         for j in range(lnhz.shape[1]):
+            V = i - j + 1
+            if np.isfinite(lnhz[i,j]) and lnhz[i,j] > lnhzmax_V[V]:
+                lnhzmax_V[V] = lnhz[i,j]
+    for i in range(lnhz.shape[0]):
+        for j in range(lnhz.shape[1]):
+            V = i - j + 1
             if np.isfinite(lnhz[i,j]):
-                E = i
-                V = E - j + 1
-                if V > Vmax:
-                    Vmax = V
-                F[V] += math.exp(lnhz[i,j])
-    F[1:Vmax+1] = -np.log(F[1:Vmax+1])
+                F[V] += math.exp(lnhz[i,j] - lnhzmax_V[V])
+    for V in range(1, len(F)):
+        F[V] = -math.log(F[V]) - lnhzmax_V[V]
     return F
 
 if __name__ == '__main__':
