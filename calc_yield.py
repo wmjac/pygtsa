@@ -61,14 +61,24 @@ def lnhzEV(lndos, dihedrals, mu, epsilon_mean, epsilon_expmean, qcoord=4):
     return lnhz
 
 def yield_from_lnhz(lnhz, target_indices):
-    lnhzG = math.log(sum(math.exp(lnhz[target_index]) for target_index in target_indices))
+    lnhzmax = max(max(lnhz[i,j] if np.isfinite(lnhz[i,j]) else 1.e-300 \
+                      for j in range(lnhz.shape[1])) for i in range(lnhz.shape[0]))
+    lnhzG = math.log(sum(math.exp(lnhz[target_index] - lnhzmax) \
+                         for target_index in target_indices)) + lnhzmax
     Zid = 0.
     for i in range(lnhz.shape[0]):
         for j in range(lnhz.shape[1]):
             if np.isfinite(lnhz[i,j]):
                 V = i - j + 1
-                Zid += math.exp(lnhz[i,j] - lnhzG)
-    return 1. / Zid
+                arg = lnhz[i,j] - lnhzmax
+                if arg > 300.:
+                    return 0.
+                else:
+                    Zid += math.exp(arg)
+    if Zid > 0.:
+        return 1. / Zid
+    else:
+        return 0.
 
 if __name__ == '__main__':
 

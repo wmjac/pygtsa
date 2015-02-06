@@ -44,6 +44,9 @@ if __name__ == '__main__':
         print("WARNING: target assembly contains at least one leaf")
     if len(target.bridges()) != 0:
         print("WARNING: target assembly contains at least one bridge")
+    if target.number_of_edges() >= 200:
+        print("WARNING: target assemblies with more than 200 edges may require an "
+              "unreasonable amount of computing time (with the current implementation).")
 
     # Run subgraphs calculation
 
