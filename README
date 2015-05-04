@@ -13,7 +13,7 @@ of self-assembly pathways for complex multicomponent structures,"
 [*Proc. Natl. Acad. Sci. U.S.A.* (2015)](http://www.pnas.org/content/early/2015/04/29/1502210112.abstract).
 
 A collection of example structures, including all structures described in 
-the above papers, are provided in the *examples* directory.
+the above papers, is provided in the *examples* directory.
 
 Use of this package is permitted in accordance with the terms of the
 included LICENSE file.
