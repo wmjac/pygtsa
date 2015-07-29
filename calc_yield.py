@@ -116,13 +116,15 @@ if __name__ == '__main__':
     mu = math.log(clargs.rho)
     epsilon = clargs.Emin
     eta = {}
+    DFG = {}
     while epsilon < clargs.Emax + clargs.dE:
         lnhz = lnhzEV(lnhEV, dihedrals, mu, epsilon, epsilon_expmean, qcoord=dihedrals_meta['qcoord'])
         eta[epsilon] = yield_from_lnhz(lnhz, target_indices)
+        DFG[epsilon] = -math.log(sum(math.exp(lnhz[index] - lnhz[0,0]) for index in target_indices))
         epsilon += clargs.dE
 
     print("Writing output to %s" % clargs.output)
     with open(clargs.output, 'w') as f:
-        f.write("# epsilon rho yield\n")
+        f.write("# epsilon rho yield DeltaF_G\n")
         for epsilon in sorted(eta.keys()):
-            f.write("%g %g %g\n" % (epsilon, clargs.rho, eta[epsilon]))
+            f.write("%g %g %g %g\n" % (epsilon, clargs.rho, eta[epsilon], DFG[epsilon]))
