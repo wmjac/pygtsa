@@ -142,6 +142,9 @@ def mc_simulate_energies_EV(target, py_lnhEV, energy_dicts, nsteps, nsamples):
 
     visits = EVHistogram(target, dtype=int)
     sums = [EVHistogram(target) for k in range(len(energy_dicts))]
+    energy_means = [sum(energy_dicts[k].values()) / len(energy_dicts[k]) for k in range(len(energy_dicts))]
+    energy_diffs = [{edge : (energy_dicts[k][edge] - energy_means[k]) for edge in energy_dicts[k].keys()} \
+                    for k in range(len(energy_dicts))]
 
     cdef size_t E, V
 
@@ -150,7 +153,7 @@ def mc_simulate_energies_EV(target, py_lnhEV, energy_dicts, nsteps, nsamples):
         E = fragment_graph._graph.nedges
         V = fragment_graph._graph.nvertices
         for k in range(len(energy_dicts)):
-            val = math.exp(sum(energy_dicts[k][edge] for edge in fragment_graph.edges_iter()))
+            val = math.exp(sum(energy_diffs[k][edge] for edge in fragment_graph.edges_iter()))
             sums[k].inc(E, V, val)
         visits.inc(E, V, 1)
 
@@ -159,7 +162,7 @@ def mc_simulate_energies_EV(target, py_lnhEV, energy_dicts, nsteps, nsamples):
         for j in range(visits.h.shape[1]):
             if visits.h[i,j] > 0:
                 E = i
-                means.h[i,j] = sum(math.log(sums[k].h[i,j] / visits.h[i,j]) / E \
+                means.h[i,j] = sum(math.log(sums[k].h[i,j] / visits.h[i,j]) / E + energy_means[k] \
                                    for k in range(len(energy_dicts))) / len(energy_dicts)
             else:
                 means.h[i,j] = -1.

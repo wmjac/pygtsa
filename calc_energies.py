@@ -27,10 +27,16 @@ if __name__ == '__main__':
     subparsers = parser.add_subparsers(dest='distribution')
     parser_gaussian = subparsers.add_parser('gaussian')
     parser_gaussian.add_argument('mean', metavar='MU', type=float, help="mean of Gaussian distribution")
-    parser_gaussian.add_argument('stddev', metavar='SIGMA', type=float, help="standard deviation of Gaussian distribution")
-    parser_gaussian.add_argument('--nsamples', type=int, default=100, help="number of independent energy samples [100]")
-    parser_gaussian.add_argument('--output-prefix', metavar='PATH', type=str, default='./', help="path to output files [./]")
+    parser_gaussian.add_argument('stddev', metavar='SIGMA', type=float, \
+                                 help="standard deviation of Gaussian distribution")
+    parser_gaussian.add_argument('--nsamples', type=int, default=100, \
+                                 help="number of independent energy samples [100]")
+    parser_gaussian.add_argument('--output-prefix', metavar='PATH', type=str, default='./', \
+                                 help="path to output files [./]")
     clargs = parser.parse_args()
+
+    if clargs.distribution == None:
+        raise Exception("please select a distribution")
 
     # Initialize
 
@@ -44,7 +50,8 @@ if __name__ == '__main__':
     # Sample energies
 
     if clargs.distribution == 'gaussian':
-        energy_dicts = [{E : random.normalvariate(clargs.mean, clargs.stddev) for E in target.edges()} for i in range(clargs.nsamples)]
+        energy_dicts = [{E : random.normalvariate(clargs.mean, clargs.stddev) for E in target.edges()} \
+                        for i in range(clargs.nsamples)]
     print("Writing energy samples to", clargs.output_prefix + 'bonds.dat')
     with open(clargs.output_prefix + 'bonds.dat', 'w') as f:
         for E in target.edges():
@@ -57,7 +64,8 @@ if __name__ == '__main__':
 
     print("Calculating energy averages...")
     nsteps = 2 * target.number_of_edges()
-    nsamples = 4000 * sum(sum(1 for j in range(lnhEV.h.shape[1]) if lnhEV.h[i,j] >= 0.) for i in range(lnhEV.h.shape[0]))
+    nsamples = 4000 * sum(sum(1 for j in range(lnhEV.h.shape[1]) if lnhEV.h[i,j] >= 0.) \
+                          for i in range(lnhEV.h.shape[0]))
     print("Collecting %d samples with %d steps between samples." % (nsamples, nsteps))
     energies, visits = mc_simulate_energies_EV(target, lnhEV, energy_dicts, nsteps, nsamples)
 
